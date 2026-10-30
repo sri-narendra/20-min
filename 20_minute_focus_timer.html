@@ -1,0 +1,832 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>CHRONO//BRUTAL // 20:00 INDUSTRIAL PROTOCOL</title>
+  
+  <!-- Fonts: Space Mono, Syne, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:ital,wght@0,400;0,700;0,800;1,800&family=Space+Mono:ital,wght@0,400;0,700;1,700&family=Syne:wght@700;800;900&display=swap" rel="stylesheet">
+
+  <style>
+    /* =========================================================================
+       NEO-BRUTALIST DESIGN SYSTEM & TOKENS
+       ========================================================================= */
+    :root {
+      --bg: #EAFF00;            /* Acid Yellow */
+      --black: #000000;
+      --white: #FFFFFF;
+      --coral: #FF3366;          /* Hyper Coral / Pink */
+      --cyan: #00F0FF;           /* Electric Cyan */
+      --lime: #00FF66;           /* Toxic Lime */
+      --purple: #BD00FF;         /* Ultra Violet */
+      --orange: #FF5500;         /* Hazard Orange */
+      --b-width: 4px;
+      --shadow-offset: 6px;
+    }
+
+    * {
+      box-sizing: border-box;
+      margin: 0;
+      padding: 0;
+      user-select: none;
+    }
+
+    body {
+      background-color: var(--bg);
+      color: var(--black);
+      font-family: 'Space Mono', monospace;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: space-between;
+      overflow-x: hidden;
+      position: relative;
+    }
+
+    /* Chunky Neo-Brutalist Utility Classes */
+    .brutal-box {
+      border: var(--b-width) solid var(--black);
+      box-shadow: var(--shadow-offset) var(--shadow-offset) 0px var(--black);
+      background: var(--white);
+    }
+
+    .brutal-box-lg {
+      border: 5px solid var(--black);
+      box-shadow: 10px 10px 0px var(--black);
+      background: var(--white);
+    }
+
+    .brutal-btn {
+      display: inline-flex;
+      align-items: center;
+      justify-content: center;
+      gap: 8px;
+      font-family: 'Syne', sans-serif;
+      font-weight: 900;
+      text-transform: uppercase;
+      font-size: 1rem;
+      letter-spacing: 0.05em;
+      padding: 12px 20px;
+      border: var(--b-width) solid var(--black);
+      box-shadow: var(--shadow-offset) var(--shadow-offset) 0px var(--black);
+      cursor: pointer;
+      transition: transform 0.07s ease, box-shadow 0.07s ease, background-color 0.1s;
+    }
+
+    .brutal-btn:hover {
+      transform: translate(-2px, -2px);
+      box-shadow: calc(var(--shadow-offset) + 2px) calc(var(--shadow-offset) + 2px) 0px var(--black);
+    }
+
+    .brutal-btn:active {
+      transform: translate(var(--shadow-offset), var(--shadow-offset));
+      box-shadow: 0px 0px 0px var(--black);
+    }
+
+    /* Hazard Warning Stripes */
+    .hazard-stripes {
+      background: repeating-linear-gradient(
+        -45deg,
+        var(--black),
+        var(--black) 16px,
+        #FFE600 16px,
+        #FFE600 32px
+      );
+    }
+
+    .hazard-stripes-coral {
+      background: repeating-linear-gradient(
+        -45deg,
+        var(--black),
+        var(--black) 14px,
+        var(--coral) 14px,
+        var(--coral) 28px
+      );
+    }
+
+    /* Kinetic Marquee Tickers */
+    .marquee-container {
+      overflow: hidden;
+      white-space: nowrap;
+      display: flex;
+      border-top: 4px solid var(--black);
+      border-bottom: 4px solid var(--black);
+      font-family: 'Syne', sans-serif;
+      font-weight: 900;
+      font-size: 0.95rem;
+    }
+
+    .marquee-content {
+      display: inline-block;
+      animation: marqueeRun 18s linear infinite;
+    }
+
+    .marquee-reverse {
+      animation: marqueeRunRev 22s linear infinite;
+    }
+
+    @keyframes marqueeRun {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+
+    @keyframes marqueeRunRev {
+      0% { transform: translateX(-50%); }
+      100% { transform: translateX(0%); }
+    }
+
+    /* Rotations & Mechanical Oscillations */
+    .rotate-slow { animation: spin 16s linear infinite; }
+    .rotate-slow-rev { animation: spinRev 20s linear infinite; }
+    .rotate-fast { animation: spin 4s linear infinite; }
+
+    @keyframes spin { from { transform: rotate(0deg); } to { transform: rotate(360deg); } }
+    @keyframes spinRev { from { transform: rotate(360deg); } to { transform: rotate(0deg); } }
+
+    /* Kinetic Glitch Tremor for digits */
+    @keyframes violentShake {
+      0%, 100% { transform: translate(0, 0); }
+      20% { transform: translate(-3px, 2px); }
+      40% { transform: translate(3px, -2px); }
+      60% { transform: translate(-2px, -3px); }
+      80% { transform: translate(3px, 1px); }
+    }
+    .shake-tick {
+      animation: violentShake 0.12s linear;
+    }
+
+    /* Background Geometric Noise Pattern Canvas */
+    #bg-canvas {
+      position: fixed;
+      inset: 0;
+      width: 100%;
+      height: 100%;
+      pointer-events: none;
+      z-index: 0;
+      opacity: 0.22;
+    }
+
+    /* Typography clamp */
+    .huge-digit {
+      font-family: 'Syne', sans-serif;
+      font-weight: 900;
+      font-size: clamp(3.8rem, 11vw, 9.5rem);
+      line-height: 0.9;
+      letter-spacing: -0.04em;
+    }
+  </style>
+</head>
+<body>
+
+  <!-- Kinetic Background Pattern -->
+  <canvas id="bg-canvas"></canvas>
+
+  <!-- =========================================================================
+       TOP MARQUEE RUNNER 1
+       ========================================================================= -->
+  <header style="position: relative; z-index: 20;">
+    <div class="marquee-container" style="background: var(--black); color: var(--lime);">
+      <div class="marquee-content" id="marquee-1">
+        ★ INDUSTRIAL FOCUS PROTOCOL // 20:00 TIMER // DO NOT DILUTE // MAXIMUM INTELLECTUAL OUTPUT // ZERO COMPROMISE // WARNING: TIME ENTROPY ACTIVE // 1200 SECONDS TOTAL ALLOCATION // SYSTEM RUNNING AT 100% DISCIPLINE // &nbsp;
+        ★ INDUSTRIAL FOCUS PROTOCOL // 20:00 TIMER // DO NOT DILUTE // MAXIMUM INTELLECTUAL OUTPUT // ZERO COMPROMISE // WARNING: TIME ENTROPY ACTIVE // 1200 SECONDS TOTAL ALLOCATION // SYSTEM RUNNING AT 100% DISCIPLINE // &nbsp;
+      </div>
+    </div>
+
+    <!-- Sub-Header Status Strip -->
+    <div style="background: var(--white); border-bottom: 4px solid var(--black); padding: 8px 16px; display: flex; flex-wrap: wrap; justify-content: space-between; align-items: center; gap: 12px; font-weight: 700; font-size: 0.85rem;">
+      <div style="display: flex; align-items: center; gap: 12px;">
+        <span style="background: var(--coral); color: var(--white); border: 2px solid var(--black); padding: 2px 8px; font-weight: 900; box-shadow: 2px 2px 0px var(--black);">UNIT 01</span>
+        <span style="letter-spacing: 0.05em;">SYS//NODE: NEO-CHRONO-20</span>
+      </div>
+
+      <!-- Realtime Local clock & audio indicator -->
+      <div style="display: flex; align-items: center; gap: 16px;">
+        <div>LOCAL: <span id="wall-clock" style="background: var(--cyan); border: 2px solid var(--black); padding: 2px 6px;">00:00:00</span></div>
+        <button id="btn-sound" class="brutal-btn" style="padding: 4px 10px; font-size: 0.75rem; background: var(--lime); box-shadow: 3px 3px 0px var(--black);">
+          <span id="sound-indicator">🔊 AUDIO [ON]</span>
+        </button>
+        <button id="btn-fs" class="brutal-btn" style="padding: 4px 10px; font-size: 0.75rem; background: var(--purple); color: var(--white); box-shadow: 3px 3px 0px var(--black);" title="Toggle Fullscreen">
+          [⛶ FULLSCREEN]
+        </button>
+      </div>
+    </div>
+  </header>
+
+  <!-- =========================================================================
+       MAIN BRUTALIST COCKPIT
+       ========================================================================= -->
+  <main style="position: relative; z-index: 10; padding: 20px 16px; display: flex; flex-direction: column; align-items: center; justify-content: center; gap: 24px; flex: 1;">
+    
+    <div style="width: 100%; max-w: 1200px; max-width: 1100px; display: flex; flex-direction: column; gap: 20px;">
+
+      <!-- TOP METRIC & HAZARD ROW -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
+        
+        <!-- Stamp 1: State Indicator -->
+        <div class="brutal-box" style="padding: 12px; background: var(--cyan); display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <div style="font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em;">CYCLE STATUS</div>
+            <div id="status-stamp" style="font-family: 'Syne', sans-serif; font-weight: 900; font-size: 1.25rem;">ARMED // READY</div>
+          </div>
+          <!-- Kinetic Rotating Starburst Badge -->
+          <svg class="rotate-slow" width="46" height="46" viewBox="0 0 100 100" style="overflow: visible;">
+            <polygon points="50,0 63,35 100,50 63,65 50,100 37,65 0,50 37,35" fill="var(--black)" stroke="var(--black)" stroke-width="2"/>
+            <circle cx="50" cy="50" r="14" fill="var(--white)" stroke="var(--black)" stroke-width="3"/>
+          </svg>
+        </div>
+
+        <!-- Stamp 2: Target Allocation -->
+        <div class="brutal-box" style="padding: 12px; background: var(--white); display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <div style="font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em;">TIME BUDGET</div>
+            <div style="font-family: 'Syne', sans-serif; font-weight: 900; font-size: 1.25rem;">20 MIN // 1200 SEC</div>
+          </div>
+          <!-- Barcode Graphic -->
+          <div style="display: flex; gap: 2px; height: 32px; align-items: stretch; background: var(--black); padding: 3px 5px; border: 2px solid var(--black);">
+            <div style="width: 3px; background: white;"></div>
+            <div style="width: 1px; background: white;"></div>
+            <div style="width: 4px; background: white;"></div>
+            <div style="width: 2px; background: white;"></div>
+            <div style="width: 5px; background: white;"></div>
+            <div style="width: 2px; background: white;"></div>
+            <div style="width: 4px; background: white;"></div>
+          </div>
+        </div>
+
+        <!-- Stamp 3: Progress Depletion Metric -->
+        <div class="brutal-box" style="padding: 12px; background: var(--coral); color: var(--white); display: flex; align-items: center; justify-content: space-between;">
+          <div>
+            <div style="font-size: 0.7rem; font-weight: 800; letter-spacing: 0.08em; color: var(--black);">REMAINING VOLUME</div>
+            <div id="stat-percentage" style="font-family: 'Syne', sans-serif; font-weight: 900; font-size: 1.25rem; color: var(--black);">100.00%</div>
+          </div>
+          <div style="border: 3px solid var(--black); background: var(--black); color: var(--lime); font-size: 0.75rem; font-weight: 900; padding: 4px 8px; box-shadow: 2px 2px 0px var(--white);">
+            STABLE
+          </div>
+        </div>
+      </div>
+
+      <!-- MAIN BRUTALIST COUNTDOWN DISPLAY CORE -->
+      <div class="brutal-box-lg" id="timer-card" style="background: var(--white); padding: 24px; position: relative; overflow: hidden;">
+        
+        <!-- Diagonal Corner Badge -->
+        <div style="position: absolute; top: 0; right: 0; background: var(--purple); color: var(--white); border-left: 4px solid var(--black); border-bottom: 4px solid var(--black); font-weight: 900; font-size: 0.75rem; padding: 4px 14px; font-family: 'Syne', sans-serif;">
+          CHRONO//CORE 20M
+        </div>
+
+        <!-- Digital Numbers Cluster -->
+        <div style="display: flex; flex-direction: column; align-items: center; justify-content: center; padding: 20px 0 10px 0;">
+          
+          <div id="clock-display-wrap" style="display: flex; align-items: baseline; justify-content: center; gap: 8px; flex-wrap: wrap;">
+            
+            <!-- Minutes -->
+            <div style="text-align: center;">
+              <span id="disp-mins" class="huge-digit" style="color: var(--black); text-shadow: 4px 4px 0px var(--cyan);">20</span>
+              <div style="font-weight: 800; font-size: 0.8rem; background: var(--black); color: var(--white); padding: 2px 6px; margin-top: 4px;">MINUTES</div>
+            </div>
+
+            <!-- Colon Separator -->
+            <span class="huge-digit" style="line-height: 0.8; animation: pulseOp 1s infinite;">:</span>
+
+            <!-- Seconds -->
+            <div style="text-align: center;">
+              <span id="disp-secs" class="huge-digit" style="color: var(--black); text-shadow: 4px 4px 0px var(--coral);">00</span>
+              <div style="font-weight: 800; font-size: 0.8rem; background: var(--black); color: var(--white); padding: 2px 6px; margin-top: 4px;">SECONDS</div>
+            </div>
+
+            <!-- Centiseconds / Milliseconds -->
+            <div style="text-align: center; margin-left: 8px;">
+              <span id="disp-cs" style="font-family: 'JetBrains Mono', monospace; font-size: clamp(2rem, 5vw, 4.2rem); font-weight: 800; color: var(--purple); text-shadow: 2px 2px 0px var(--black);">.00</span>
+              <div style="font-weight: 800; font-size: 0.7rem; border: 2px solid var(--black); background: var(--bg); color: var(--black); padding: 1px 4px; margin-top: 4px;">CENTIS</div>
+            </div>
+          </div>
+        </div>
+
+        <!-- =====================================================================
+             SEGMENTED BRUTALIST 20-BLOCK KINETIC PROGRESS METER
+             ===================================================================== -->
+        <div style="margin-top: 24px;">
+          <div style="display: flex; justify-content: space-between; align-items: center; margin-bottom: 8px; font-size: 0.75rem; font-weight: 800;">
+            <span>[METRIC 01: SEGMENTED 20-BLOCK ALLOCATION GRID]</span>
+            <span id="block-counter">20 / 20 CELLS ACTIVE</span>
+          </div>
+
+          <div id="meter-grid" style="display: grid; grid-template-columns: repeat(20, 1fr); gap: 4px; height: 36px; border: 4px solid var(--black); background: var(--black); padding: 3px;">
+            <!-- 20 individual brutal blocks generated dynamically -->
+          </div>
+        </div>
+
+        <!-- Linear Continuous Progress Bar Underneath -->
+        <div style="margin-top: 8px; height: 16px; border: 3px solid var(--black); background: var(--white); position: relative; overflow: hidden;">
+          <div id="continuous-bar" style="height: 100%; width: 100%; background: repeating-linear-gradient(90deg, var(--lime), var(--lime) 12px, var(--cyan) 12px, var(--cyan) 24px); border-right: 3px solid var(--black); transition: width 0.08s linear;"></div>
+        </div>
+
+      </div>
+
+      <!-- =====================================================================
+           CHUNKY BRUTALIST CONTROLS CONSOLE
+           ===================================================================== -->
+      <div style="display: flex; flex-wrap: wrap; gap: 14px; justify-content: center; align-items: center;">
+        
+        <!-- Primary START / HALT Button -->
+        <button id="btn-toggle" class="brutal-btn" style="background: var(--lime); font-size: 1.2rem; padding: 16px 36px; box-shadow: 8px 8px 0px var(--black);">
+          <span id="btn-toggle-icon">▶</span>
+          <span id="btn-toggle-label">ENGAGE (START)</span>
+        </button>
+
+        <!-- RESET Button -->
+        <button id="btn-reset" class="brutal-btn" style="background: var(--white); font-size: 1.05rem; padding: 16px 26px; box-shadow: 6px 6px 0px var(--black);">
+          <span>⟲</span>
+          <span>RESET (20:00)</span>
+        </button>
+
+        <!-- Quick Overrides: +1 MIN / -1 MIN -->
+        <div style="display: flex; gap: 8px;">
+          <button id="btn-add-min" class="brutal-btn" style="background: var(--cyan); padding: 14px 18px;" title="Add 1 minute">
+            +1 MIN
+          </button>
+          <button id="btn-sub-min" class="brutal-btn" style="background: var(--coral); color: var(--white); padding: 14px 18px;" title="Subtract 1 minute">
+            -1 MIN
+          </button>
+        </div>
+
+        <!-- TEST WARP: JUMP TO 5 SECONDS -->
+        <button id="btn-warp" class="brutal-btn" style="background: var(--purple); color: var(--white); padding: 14px 20px;" title="Instant preview of final 5 seconds & completion alarm">
+          ⚡ TEST JUMP (5s)
+        </button>
+      </div>
+
+      <!-- =========================================================================
+           INDUSTRIAL STATUS BADGES & KEYBOARD SHORTCUTS TABLE
+           ========================================================================= -->
+      <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(280px, 1fr)); gap: 16px; margin-top: 6px;">
+        
+        <!-- Live Terminal Log -->
+        <div class="brutal-box" style="padding: 14px; background: var(--black); color: var(--lime); font-family: 'JetBrains Mono', monospace; font-size: 0.75rem;">
+          <div style="border-bottom: 2px solid var(--lime); padding-bottom: 4px; margin-bottom: 6px; font-weight: 800; display: flex; justify-content: space-between;">
+            <span>TERMINAL EVENTS LOG</span>
+            <span style="animation: pulseOp 0.8s infinite;">● REALTIME</span>
+          </div>
+          <div id="log-body" style="height: 64px; overflow: hidden; display: flex; flex-direction: column; justify-content: flex-end; gap: 3px;">
+            <div>> SYSTEM LOADED: 20-MIN NEO-BRUTAL MACHINE</div>
+            <div>> PROTOCOL: PURE HIGH-DENSITY FOCUS</div>
+            <div>> STANDBY FOR OPERATOR INPUT...</div>
+          </div>
+        </div>
+
+        <!-- Hotkeys Guidance -->
+        <div class="brutal-box" style="padding: 14px; background: #FFE600; font-size: 0.8rem; font-weight: 800;">
+          <div style="border-bottom: 3px solid var(--black); padding-bottom: 4px; margin-bottom: 8px; font-family: 'Syne', sans-serif; font-size: 0.95rem;">
+            TACTILE CONTROLS & SHORTCUTS
+          </div>
+          <div style="display: grid; grid-template-columns: auto 1fr; gap: 4px 12px; align-items: center;">
+            <span style="background: var(--black); color: var(--white); padding: 1px 6px; font-size: 0.7rem;">[SPACE]</span>
+            <span>ENGAGE / HALT COUNTDOWN</span>
+            <span style="background: var(--black); color: var(--white); padding: 1px 6px; font-size: 0.7rem;">[R]</span>
+            <span>HARD RESET TO 20:00</span>
+            <span style="background: var(--black); color: var(--white); padding: 1px 6px; font-size: 0.7rem;">[M]</span>
+            <span>AUDIO MUTE TOGGLE</span>
+            <span style="background: var(--black); color: var(--white); padding: 1px 6px; font-size: 0.7rem;">[F]</span>
+            <span>FULLSCREEN DISPLAY MODE</span>
+          </div>
+        </div>
+
+      </div>
+
+    </div>
+  </main>
+
+  <!-- =========================================================================
+       BOTTOM RUNNER: HAZARD STRIPE FOOTER WITH REVERSE MARQUEE
+       ========================================================================= -->
+  <footer style="position: relative; z-index: 20;">
+    <div style="height: 12px;" class="hazard-stripes"></div>
+    <div class="marquee-container" style="background: var(--coral); color: var(--white);">
+      <div class="marquee-content marquee-reverse">
+        ⚠ FOCUS PHASE ACTIVE ⚠ NO PHONE ⚠ NO TAB HOPPING ⚠ RELENTLESS INDUSTRIAL EXECUTION ⚠ 20 MINUTES OF MONK-MODE EFFORT ⚠ ENTROPY WILL BE CONQUERED ⚠ &nbsp;
+        ⚠ FOCUS PHASE ACTIVE ⚠ NO PHONE ⚠ NO TAB HOPPING ⚠ RELENTLESS INDUSTRIAL EXECUTION ⚠ 20 MINUTES OF MONK-MODE EFFORT ⚠ ENTROPY WILL BE CONQUERED ⚠ &nbsp;
+      </div>
+    </div>
+  </footer>
+
+  <!-- =========================================================================
+       JAVASCRIPT LOGIC: HIGH-PRECISION RAFL OOP, WEB AUDIO, CANVAS PATTERNS
+       ========================================================================= -->
+  <script>
+    /* -------------------------------------------------------------------------
+       1. CONSTANTS & TIMING CORE
+       ------------------------------------------------------------------------- */
+    const DEFAULT_MS = 20 * 60 * 1000; // 20:00 (1,200,000 ms)
+    let totalTargetMs = DEFAULT_MS;
+    let remainingMs = DEFAULT_MS;
+    let isRunning = false;
+    let lastTime = null;
+    let animId = null;
+    let soundEnabled = true;
+
+    // DOM Elements
+    const dispMins = document.getElementById('disp-mins');
+    const dispSecs = document.getElementById('disp-secs');
+    const dispCs = document.getElementById('disp-cs');
+    const statusStamp = document.getElementById('status-stamp');
+    const statPercentage = document.getElementById('stat-percentage');
+    const continuousBar = document.getElementById('continuous-bar');
+    const meterGrid = document.getElementById('meter-grid');
+    const blockCounter = document.getElementById('block-counter');
+    const btnToggle = document.getElementById('btn-toggle');
+    const btnToggleLabel = document.getElementById('btn-toggle-label');
+    const btnToggleIcon = document.getElementById('btn-toggle-icon');
+    const btnReset = document.getElementById('btn-reset');
+    const btnAddMin = document.getElementById('btn-add-min');
+    const btnSubMin = document.getElementById('btn-sub-min');
+    const btnWarp = document.getElementById('btn-warp');
+    const btnSound = document.getElementById('btn-sound');
+    const soundIndicator = document.getElementById('sound-indicator');
+    const btnFs = document.getElementById('btn-fs');
+    const wallClock = document.getElementById('wall-clock');
+    const logBody = document.getElementById('log-body');
+    const timerCard = document.getElementById('timer-card');
+
+    /* -------------------------------------------------------------------------
+       2. GENERATE THE 20 NEO-BRUTALIST METER BLOCKS
+       ------------------------------------------------------------------------- */
+    const blockEls = [];
+    const colors = ['var(--lime)', 'var(--cyan)', 'var(--coral)', 'var(--purple)', 'var(--orange)'];
+
+    for (let i = 0; i < 20; i++) {
+      const block = document.createElement('div');
+      block.style.height = '100%';
+      block.style.border = '2px solid var(--black)';
+      block.style.backgroundColor = colors[i % colors.length];
+      block.style.transition = 'transform 0.1s ease, opacity 0.15s ease';
+      meterGrid.appendChild(block);
+      blockEls.push(block);
+    }
+
+    /* -------------------------------------------------------------------------
+       3. SYNTHESIZER & AUDIO MATRIX (WEB AUDIO API)
+       ------------------------------------------------------------------------- */
+    let audioCtx = null;
+
+    function getAudioContext() {
+      if (!audioCtx) {
+        audioCtx = new (window.AudioContext || window.webkitAudioContext)();
+      }
+      if (audioCtx.state === 'suspended') {
+        audioCtx.resume();
+      }
+      return audioCtx;
+    }
+
+    // Heavy Brutalist Mechanical Click
+    function playMechanicalTick(freq = 600, duration = 0.04) {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        const osc = ctx.createOscillator();
+        const gain = ctx.createGain();
+        osc.type = 'square';
+        osc.frequency.setValueAtTime(freq, ctx.currentTime);
+        osc.frequency.exponentialRampToValueAtTime(80, ctx.currentTime + duration);
+
+        gain.gain.setValueAtTime(0.2, ctx.currentTime);
+        gain.gain.exponentialRampToValueAtTime(0.001, ctx.currentTime + duration);
+
+        osc.connect(gain);
+        gain.connect(ctx.destination);
+        osc.start();
+        osc.stop(ctx.currentTime + duration);
+      } catch (err) {}
+    }
+
+    // Industrial Zero-Hour Klaxon Blast
+    function playAlarmFanfare() {
+      if (!soundEnabled) return;
+      try {
+        const ctx = getAudioContext();
+        const notes = [220, 293.66, 369.99, 440, 587.33];
+        notes.forEach((freq, idx) => {
+          setTimeout(() => {
+            const osc = ctx.createOscillator();
+            const gain = ctx.createGain();
+            osc.type = 'sawtooth';
+            osc.frequency.setValueAtTime(freq, ctx.currentTime);
+            osc.frequency.exponentialRampToValueAtTime(freq * 1.5, ctx.currentTime + 0.4);
+
+            gain.gain.setValueAtTime(0.35, ctx.currentTime);
+            gain.gain.exponentialRampToValueAtTime(0.0001, ctx.currentTime + 0.5);
+
+            osc.connect(gain);
+            gain.connect(ctx.destination);
+            osc.start();
+            osc.stop(ctx.currentTime + 0.5);
+          }, idx * 100);
+        });
+      } catch (err) {}
+    }
+
+    /* -------------------------------------------------------------------------
+       4. LOGGING HELPER
+       ------------------------------------------------------------------------- */
+    function addTerminalLog(text) {
+      const line = document.createElement('div');
+      line.textContent = `> ${text}`;
+      logBody.appendChild(line);
+      if (logBody.children.length > 5) {
+        logBody.removeChild(logBody.firstElementChild);
+      }
+    }
+
+    /* -------------------------------------------------------------------------
+       5. HUD UPDATE & DRAW LOOP
+       ------------------------------------------------------------------------- */
+    let lastSecondReported = null;
+
+    function renderDisplay() {
+      const minutes = Math.floor(remainingMs / 60000);
+      const seconds = Math.floor((remainingMs % 60000) / 1000);
+      const centis = Math.floor((remainingMs % 1000) / 10);
+
+      dispMins.textContent = String(minutes).padStart(2, '0');
+      dispSecs.textContent = String(seconds).padStart(2, '0');
+      dispCs.textContent = `.${String(centis).padStart(2, '0')}`;
+
+      // Update Document Title
+      document.title = `[${String(minutes).padStart(2, '0')}:${String(seconds).padStart(2, '0')}] NEO-BRUTAL CHRONO`;
+
+      // Tick sound on whole second boundary during run
+      if (isRunning && lastSecondReported !== seconds) {
+        lastSecondReported = seconds;
+        playMechanicalTick(seconds % 2 === 0 ? 800 : 600);
+        
+        // Slight glitch shake
+        timerCard.classList.remove('shake-tick');
+        void timerCard.offsetWidth;
+        timerCard.classList.add('shake-tick');
+      }
+
+      // Percentage remaining
+      const pct = Math.max(0, (remainingMs / totalTargetMs) * 100);
+      statPercentage.textContent = `${pct.toFixed(2)}%`;
+      continuousBar.style.width = `${pct}%`;
+
+      // Update the 20-block segmented bar
+      const activeBlocks = Math.ceil((pct / 100) * 20);
+      blockCounter.textContent = `${activeBlocks} / 20 CELLS ACTIVE`;
+
+      blockEls.forEach((el, index) => {
+        if (index < activeBlocks) {
+          el.style.opacity = '1';
+          el.style.transform = 'scale(1)';
+        } else {
+          el.style.opacity = '0.08';
+          el.style.transform = 'scale(0.85)';
+        }
+      });
+    }
+
+    /* -------------------------------------------------------------------------
+       6. RAF LOOP ENGINE
+       ------------------------------------------------------------------------- */
+    function countdownStep(timestamp) {
+      if (!isRunning) return;
+
+      if (!lastTime) lastTime = timestamp;
+      const delta = timestamp - lastTime;
+      lastTime = timestamp;
+
+      remainingMs -= delta;
+
+      if (remainingMs <= 0) {
+        remainingMs = 0;
+        isRunning = false;
+        lastTime = null;
+        renderDisplay();
+        triggerComplete();
+        return;
+      }
+
+      renderDisplay();
+      animId = requestAnimationFrame(countdownStep);
+    }
+
+    function startTimer() {
+      getAudioContext();
+      if (remainingMs <= 0) remainingMs = totalTargetMs;
+      isRunning = true;
+      lastTime = null;
+
+      btnToggle.style.backgroundColor = 'var(--coral)';
+      btnToggle.style.color = 'var(--white)';
+      btnToggleLabel.textContent = 'HALT (PAUSE)';
+      btnToggleIcon.textContent = '⏸';
+
+      statusStamp.textContent = 'RUNNING // LOCKED';
+      statusStamp.parentElement.parentElement.style.backgroundColor = 'var(--lime)';
+
+      addTerminalLog('OPERATOR ENGAGED CHRONOMETER.');
+      playMechanicalTick(900, 0.08);
+
+      animId = requestAnimationFrame(countdownStep);
+    }
+
+    function pauseTimer() {
+      isRunning = false;
+      if (animId) cancelAnimationFrame(animId);
+      lastTime = null;
+
+      btnToggle.style.backgroundColor = 'var(--lime)';
+      btnToggle.style.color = 'var(--black)';
+      btnToggleLabel.textContent = 'RESUME';
+      btnToggleIcon.textContent = '▶';
+
+      statusStamp.textContent = 'PAUSED // STASIS';
+      statusStamp.parentElement.parentElement.style.backgroundColor = 'var(--cyan)';
+
+      addTerminalLog('CHRONOMETER SUSPENDED.');
+      playMechanicalTick(400, 0.06);
+    }
+
+    function toggleTimer() {
+      if (isRunning) {
+        pauseTimer();
+      } else {
+        startTimer();
+      }
+    }
+
+    function resetTimer(newMs = DEFAULT_MS) {
+      pauseTimer();
+      totalTargetMs = newMs;
+      remainingMs = newMs;
+      renderDisplay();
+
+      btnToggleLabel.textContent = 'ENGAGE (START)';
+      btnToggleIcon.textContent = '▶';
+      statusStamp.textContent = 'ARMED // READY';
+      statusStamp.parentElement.parentElement.style.backgroundColor = 'var(--cyan)';
+
+      addTerminalLog(`RESET TO ${(newMs / 60000).toFixed(0)}:00.`);
+      playMechanicalTick(500, 0.08);
+    }
+
+    function triggerComplete() {
+      statusStamp.textContent = 'COMPLETED // 100% DONE';
+      statusStamp.parentElement.parentElement.style.backgroundColor = 'var(--lime)';
+      btnToggleLabel.textContent = 'CYCLE DONE';
+      btnToggleIcon.textContent = '✔';
+
+      addTerminalLog('MISSION SUCCESSFUL: 20-MINUTES REACHED!');
+      playAlarmFanfare();
+
+      // Flashing alert feedback
+      let count = 0;
+      const flashInterval = setInterval(() => {
+        timerCard.style.backgroundColor = (count % 2 === 0) ? 'var(--lime)' : 'var(--white)';
+        count++;
+        if (count > 8) {
+          clearInterval(flashInterval);
+          timerCard.style.backgroundColor = 'var(--white)';
+        }
+      }, 150);
+    }
+
+    /* -------------------------------------------------------------------------
+       7. BUTTON EVENTS & OVERRIDES
+       ------------------------------------------------------------------------- */
+    btnToggle.addEventListener('click', toggleTimer);
+    btnReset.addEventListener('click', () => resetTimer(DEFAULT_MS));
+
+    btnAddMin.addEventListener('click', () => {
+      remainingMs += 60 * 1000;
+      totalTargetMs = Math.max(totalTargetMs, remainingMs);
+      renderDisplay();
+      addTerminalLog('+60 SECONDS ADDED');
+      playMechanicalTick(700, 0.05);
+    });
+
+    btnSubMin.addEventListener('click', () => {
+      if (remainingMs > 60 * 1000) {
+        remainingMs -= 60 * 1000;
+        renderDisplay();
+        addTerminalLog('-60 SECONDS SUBTRACTED');
+        playMechanicalTick(350, 0.05);
+      }
+    });
+
+    // 5-second jump for quick testing
+    btnWarp.addEventListener('click', () => {
+      pauseTimer();
+      totalTargetMs = DEFAULT_MS;
+      remainingMs = 5 * 1000;
+      renderDisplay();
+      addTerminalLog('WARP TEST: 5 SECONDS REMAINING ARMED');
+      startTimer();
+    });
+
+    // Sound Toggle
+    btnSound.addEventListener('click', () => {
+      soundEnabled = !soundEnabled;
+      if (soundEnabled) {
+        soundIndicator.textContent = '🔊 AUDIO [ON]';
+        btnSound.style.backgroundColor = 'var(--lime)';
+        btnSound.style.color = 'var(--black)';
+        playMechanicalTick(650, 0.05);
+      } else {
+        soundIndicator.textContent = '🔇 AUDIO [MUTED]';
+        btnSound.style.backgroundColor = 'var(--coral)';
+        btnSound.style.color = 'var(--white)';
+      }
+    });
+
+    // Fullscreen Toggle
+    btnFs.addEventListener('click', () => {
+      if (!document.fullscreenElement) {
+        document.documentElement.requestFullscreen().catch(() => {});
+      } else {
+        document.exitFullscreen().catch(() => {});
+      }
+    });
+
+    // Keyboard Shortcuts
+    window.addEventListener('keydown', (e) => {
+      if (e.target.tagName === 'INPUT' || e.target.tagName === 'TEXTAREA') return;
+      if (e.code === 'Space') {
+        e.preventDefault();
+        toggleTimer();
+      } else if (e.key === 'r' || e.key === 'R') {
+        e.preventDefault();
+        resetTimer(DEFAULT_MS);
+      } else if (e.key === 'm' || e.key === 'M') {
+        e.preventDefault();
+        btnSound.click();
+      } else if (e.key === 'f' || e.key === 'F') {
+        e.preventDefault();
+        btnFs.click();
+      }
+    });
+
+    /* -------------------------------------------------------------------------
+       8. KINETIC GEOMETRIC BACKGROUND PATTERN (CANVAS)
+       ------------------------------------------------------------------------- */
+    const canvas = document.getElementById('bg-canvas');
+    const ctx = canvas.getContext('2d');
+    let cw, ch;
+
+    function resizeCanvas() {
+      cw = window.innerWidth;
+      ch = window.innerHeight;
+      canvas.width = cw;
+      canvas.height = ch;
+    }
+    window.addEventListener('resize', resizeCanvas);
+    resizeCanvas();
+
+    let patternOffset = 0;
+    function drawBrutalPattern() {
+      ctx.clearRect(0, 0, cw, ch);
+      const step = 48;
+      patternOffset = (patternOffset + (isRunning ? 0.8 : 0.2)) % step;
+
+      ctx.strokeStyle = '#000000';
+      ctx.lineWidth = 1.5;
+
+      for (let x = -step; x < cw + step; x += step) {
+        for (let y = -step; y < ch + step; y += step) {
+          const posX = x + patternOffset;
+          const posY = y + patternOffset;
+
+          // Brutalist Crosshair Plus
+          ctx.beginPath();
+          ctx.moveTo(posX - 5, posY);
+          ctx.lineTo(posX + 5, posY);
+          ctx.moveTo(posX, posY - 5);
+          ctx.lineTo(posX, posY + 5);
+          ctx.stroke();
+
+          // Sporadic dots
+          if ((x + y) % (step * 2) === 0) {
+            ctx.fillStyle = '#000000';
+            ctx.fillRect(posX + 18, posY + 18, 3, 3);
+          }
+        }
+      }
+      requestAnimationFrame(drawBrutalPattern);
+    }
+    requestAnimationFrame(drawBrutalPattern);
+
+    /* -------------------------------------------------------------------------
+       9. LIVE SYSTEM CLOCK
+       ------------------------------------------------------------------------- */
+    setInterval(() => {
+      const now = new Date();
+      wallClock.textContent = now.toLocaleTimeString('en-GB');
+    }, 500);
+
+    // Initial paint
+    renderDisplay();
+  </script>
+</body>
+</html>
